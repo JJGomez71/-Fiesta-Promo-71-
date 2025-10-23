@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Ok - Inscripción</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0ff" />
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <img src="/icon-192.png" alt="logo" class="logo"/>
+    <h1>Ok <small>ok</small></h1>
+    <p>Precio: 50€ — Paga por Bizum al número <strong>+34 630894275</strong> y escribe aquí la referencia de la operación.</p>
+    <form id="regForm">
+      <label>Nombre completo<input name="name" required></label>
+      <label>Email (opcional)<input name="email" type="email"></label>
+      <label>Teléfono (móvil) <input name="phone" required></label>
+      <label>Referencia Bizum (opcional) <input name="bizum_ref"></label>
+      <button type="submit">Inscribirme</button>
+    </form>
+    <div id="msg"></div>
+    <p class="small">Contacto: <a href="mailto:juanjogomezhidalgo@gmail.com">juanjogomezhidalgo@gmail.com</a></p>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(err=>console.log('SW error',err));
+    }
+    const form = document.getElementById('regForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const body = {
+        name: data.get('name'),
+        email: data.get('email'),
+        phone: data.get('phone'),
+        bizum_ref: data.get('bizum_ref')
+      };
+      const r = await fetch('/api/register', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      const json = await r.json();
+      const msg = document.getElementById('msg');
+      if (json.success) {
+        msg.textContent = 'Inscripción recibida. Recibirás confirmación cuando verifiquemos el pago.';
+        form.reset();
+      } else {
+        msg.textContent = 'Error: ' + (json.error || 'Problema al enviar.');
+      }
+    });
+  </script>
+</body>
+</html>

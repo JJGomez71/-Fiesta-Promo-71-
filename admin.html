@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Admin - Ok</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Panel Admin - Inscritos</h1>
+    <p>Usuario: <strong>jjgomez2025</strong></p>
+    <button id="refresh">Refrescar</button>
+    <button id="export">Exportar CSV</button>
+    <table id="table">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Tel</th><th>BizumRef</th><th>Pagado</th><th>Acción</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="small">Contacto: <a href="mailto:juanjogomezhidalgo@gmail.com">juanjogomezhidalgo@gmail.com</a></p>
+  </div>
+<script>
+  const tbody = document.querySelector('#table tbody');
+  async function load(){
+    const r = await fetch('/api/attendees', { headers: {} });
+    if (r.status === 401) {
+      alert('Área protegida. Introduce las credenciales en el diálogo del navegador.');
+      return;
+    }
+    const rows = await r.json();
+    tbody.innerHTML = '';
+    rows.forEach(row=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+row.id+'</td><td>'+row.name+'</td><td>'+row.phone+'</td><td>'+(row.bizum_ref||'')+'</td>'
+      +'<td>'+(row.paid ? 'Sí' : 'No')+'</td>'
+      +'<td><button data-id="'+row.id+'" class="toggle">'+(row.paid ? 'Marcar No' : 'Marcar Sí')+'</button></td>';
+      tbody.appendChild(tr);
+    });
+    document.querySelectorAll('.toggle').forEach(btn=>{
+      btn.onclick = async () => {
+        const id = btn.dataset.id;
+        const isPaid = btn.textContent.includes('No');
+        await fetch('/api/mark-paid', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({id, paid: isPaid})
+        });
+        load();
+      };
+    });
+  }
+  document.getElementById('refresh').onclick = load;
+  document.getElementById('export').onclick = ()=> location.href='/api/export-csv';
+  load();
+</script>
+</body>
+</html>

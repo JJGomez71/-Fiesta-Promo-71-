@@ -1,0 +1,1 @@
+App: Ok\nBizum: +34 630894275\nContact: juanjogomezhidalgo@gmail.com\nAdmin: jjgomez2025\n

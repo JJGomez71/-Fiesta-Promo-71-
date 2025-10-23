@@ -1,0 +1,10 @@
+
+body { font-family: Arial, sans-serif; padding: 20px; background: linear-gradient(135deg,#0b0b1a,#1a0733); color:#fff }
+.container { max-width:800px; margin:0 auto; background:rgba(255,255,255,0.03); padding:20px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+input { display:block; width:100%; padding:10px; margin:8px 0 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); color:#fff}
+button { padding:10px 14px; margin-right:8px; border-radius:6px; border:none; background:#ff00cc; color:#fff; cursor:pointer}
+h1 small { font-size:0.45em; color:#ffd700; margin-left:8px}
+.logo { width:96px; display:block; margin:0 auto 10px}
+table { width:100%; border-collapse:collapse; margin-top:12px }
+th,td { padding:8px; border-bottom:1px solid rgba(255,255,255,0.03); text-align:left}
+.small { font-size:0.9em; color:#ddd}
